@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'router.dart';
 import 'theme/app_theme.dart';
-import '../features/splash/presentation/screens/splash_screen.dart';
 
 class CampBookingApp extends StatelessWidget {
   const CampBookingApp({super.key});
@@ -11,7 +11,8 @@ class CampBookingApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Camp Booking App',
       theme: AppTheme.lightTheme,
-      home: const SplashScreen(),
+      initialRoute: AppRoutes.splash,
+      onGenerateRoute: AppRouter.onGenerateRoute,
     );
   }
 }
