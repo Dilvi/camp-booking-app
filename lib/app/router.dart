@@ -9,6 +9,8 @@ import '../features/camps/presentation/screens/camp_detail_screen.dart';
 import '../features/camps/data/models/camp_model.dart';
 import '../features/profile/presentation/screens/profile_screen.dart';
 import '../features/profile/presentation/screens/change_password_screen.dart';
+import '../features/profile/presentation/screens/edit_profile_screen.dart';
+import '../features/profile/data/models/profile_model.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -20,6 +22,7 @@ class AppRoutes {
   static const String campDetail = '/camp-detail';
   static const String profile = '/profile-screen';
   static const String changePassword = '/change-password';
+  static const String editProfile = '/edit-profile';
 }
 
 class AppRouter {
@@ -41,6 +44,18 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ProfileScreen());
       case AppRoutes.changePassword:
         return MaterialPageRoute(builder: (_) => const ChangePasswordScreen());
+      case AppRoutes.editProfile:
+        final args = settings.arguments;
+        if (args is! ProfileModel) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('Профиль не передан')),
+            ),
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) => EditProfileScreen(profile: args),
+        );
       case AppRoutes.campDetail:
         final args = settings.arguments;
         if (args is! CampModel) {

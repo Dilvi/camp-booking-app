@@ -148,63 +148,91 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     final profile = _profile!;
-    return Column(
-      children: [
-        _ProfileCard(profile: profile),
-        const SizedBox(height: 5),
-        _ProfileMenuTile(
-          icon: Icons.lock_outline,
-          title: 'Сменить пароль',
-          onTap: () async {
-            final result = await Navigator.pushNamed(
-              context,
-              AppRoutes.changePassword,
-            );
+    return Transform.translate(
+      offset: const Offset(0, -58),
+      child: Column(
+        children: [
+          _ProfileCard(
+            profile: profile,
+            onTap: () async {
+              debugPrint('PROFILE CARD TAP');
 
-            if (!mounted) return;
-
-            if (result is String && result.isNotEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Пароль успешно изменён'),
-                ),
+              final result = await Navigator.pushNamed(
+                context,
+                AppRoutes.editProfile,
+                arguments: profile,
               );
-            }
-          },
-        ),
-        const SizedBox(height: 18),
-        _ProfileMenuTile(
-          icon: Icons.group_outlined,
-          title: 'Дети',
-          onTap: () {},
-        ),
-        const SizedBox(height: 18),
-        _ProfileMenuTile(
-          icon: Icons.article_outlined,
-          title: 'Мои бронирования',
-          onTap: () {},
-        ),
-        const SizedBox(height: 18),
-        _ProfileMenuTile(
-          icon: Icons.favorite_border,
-          title: 'Избранное',
-          onTap: () {},
-        ),
-        const SizedBox(height: 18),
-        _ProfileMenuTile(
-          icon: Icons.more_vert,
-          title: 'Больше',
-          onTap: () {},
-        ),
-        const SizedBox(height: 18),
-        _ProfileMenuTile(
-          icon: Icons.logout,
-          title: 'Выйти',
-          iconColor: const Color(0xFFE55050),
-          textColor: const Color(0xFFE55050),
-          onTap: _logout,
-        ),
-      ],
+
+              if (!mounted) return;
+
+              if (result is ProfileModel) {
+                setState(() {
+                  _profile = result;
+                });
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Данные профиля успешно обновлены'),
+                  ),
+                );
+              }
+            },
+          ),
+          const SizedBox(height: 5),
+          _ProfileMenuTile(
+            icon: Icons.lock_outline,
+            title: 'Сменить пароль',
+            onTap: () async {
+              final result = await Navigator.pushNamed(
+                context,
+                AppRoutes.changePassword,
+              );
+
+              if (!mounted) return;
+
+              if (result is String && result.isNotEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Пароль успешно изменён'),
+                  ),
+                );
+              }
+            },
+          ),
+          const SizedBox(height: 18),
+          _ProfileMenuTile(
+            icon: Icons.group_outlined,
+            title: 'Дети',
+            onTap: () {},
+          ),
+          const SizedBox(height: 18),
+          _ProfileMenuTile(
+            icon: Icons.article_outlined,
+            title: 'Мои бронирования',
+            onTap: () {},
+          ),
+          const SizedBox(height: 18),
+          _ProfileMenuTile(
+            icon: Icons.favorite_border,
+            title: 'Избранное',
+            onTap: () {},
+          ),
+          const SizedBox(height: 18),
+          _ProfileMenuTile(
+            icon: Icons.more_vert,
+            title: 'Больше',
+            onTap: () {},
+          ),
+          const SizedBox(height: 18),
+          _ProfileMenuTile(
+            icon: Icons.logout,
+            title: 'Выйти',
+            iconColor: const Color(0xFFE55050),
+            textColor: const Color(0xFFE55050),
+            onTap: _logout,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -251,13 +279,18 @@ class _ProfileHeader extends StatelessWidget {
 
 class _ProfileCard extends StatelessWidget {
   final ProfileModel profile;
+  final VoidCallback onTap;
 
-  const _ProfileCard({required this.profile});
+  const _ProfileCard({
+    required this.profile,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Transform.translate(
-      offset: const Offset(0, -48),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(14),

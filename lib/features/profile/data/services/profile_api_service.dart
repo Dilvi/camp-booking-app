@@ -51,4 +51,37 @@ class ProfileApiService {
       statusCode: response.statusCode,
     );
   }
+
+  Future<ProfileModel> updateProfile({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String phone,
+    required String? avatarUrl,
+  }) async {
+    final response = await _dioClient.put(
+      ApiConstants.profile,
+      data: {
+        'first_name': firstName,
+        'last_name': lastName,
+        'email': email,
+        'phone': phone,
+        'avatar_url': avatarUrl ?? '',
+      },
+    );
+
+    final data = response.data;
+
+    if (data is Map<String, dynamic>) {
+      final nested = data['data'];
+      if (nested is Map<String, dynamic>) {
+        return ProfileModel.fromJson(nested);
+      }
+    }
+
+    throw ApiException(
+      message: 'Некорректный ответ сервера при обновлении профиля',
+      statusCode: response.statusCode,
+    );
+  }
 }
