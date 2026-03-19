@@ -3,13 +3,19 @@ import 'package:flutter/material.dart';
 class CampCard extends StatelessWidget {
   final String title;
   final String location;
+  final int bookedCount;
   final bool isFavorite;
+  final String? imageUrl;
+  final VoidCallback onFavoriteTap;
 
   const CampCard({
     super.key,
     required this.title,
     required this.location,
+    required this.bookedCount,
     required this.isFavorite,
+    required this.onFavoriteTap,
+    this.imageUrl,
   });
 
   @override
@@ -19,46 +25,40 @@ class CampCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: const Color(0xFFE8E8E8),
-        ),
+        border: Border.all(color: const Color(0xFFE8E8E8)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
             children: [
-              Container(
-                height: 205,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD9D9D9),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.image_outlined,
-                    size: 48,
-                    color: Colors.white,
-                  ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: SizedBox(
+                  height: 205,
+                  width: double.infinity,
+                  child: _CampImage(imageUrl: imageUrl),
                 ),
               ),
               Positioned(
                 top: 12,
                 right: 12,
-                child: Container(
-                  width: 42,
-                  height: 42,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: isFavorite
-                        ? const Color(0xFFE54B4B)
-                        : const Color(0xFF1E1E1E),
-                    size: 22,
+                child: GestureDetector(
+                  onTap: onFavoriteTap,
+                  child: Container(
+                    width: 42,
+                    height: 42,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite
+                          ? const Color(0xFFE54B4B)
+                          : const Color(0xFF1E1E1E),
+                      size: 22,
+                    ),
                   ),
                 ),
               ),
@@ -92,7 +92,7 @@ class CampCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              const _BookedUsers(),
+              _BookedUsers(bookedCount: bookedCount),
             ],
           ),
         ],
@@ -101,38 +101,83 @@ class CampCard extends StatelessWidget {
   }
 }
 
-class _BookedUsers extends StatelessWidget {
-  const _BookedUsers();
+class _CampImage extends StatelessWidget {
+  final String? imageUrl;
+
+  const _CampImage({required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
-      width: 78,
+    if (imageUrl == null || imageUrl!.isEmpty) {
+      return Container(
+        color: const Color(0xFFD9D9D9),
+        alignment: Alignment.center,
+        child: const Icon(
+          Icons.image_outlined,
+          color: Colors.white,
+          size: 44,
+        ),
+      );
+    }
+
+    return Image.network(
+      imageUrl!,
+      fit: BoxFit.cover,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Container(
+          color: const Color(0xFFEAEAEA),
+          alignment: Alignment.center,
+          child: const SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        );
+      },
+      errorBuilder: (_, __, ___) => Container(
+        color: const Color(0xFFD9D9D9),
+        alignment: Alignment.center,
+        child: const Icon(
+          Icons.broken_image_outlined,
+          color: Colors.white,
+          size: 44,
+        ),
+      ),
+    );
+  }
+}
+
+class _BookedUsers extends StatelessWidget {
+  final int bookedCount;
+
+  const _BookedUsers({required this.bookedCount});
+
+  @override
+  Widget build(BuildContext context) {
+    final extra = bookedCount > 3 ? bookedCount - 3 : 0;
+
+    return SizedBox(
+      width: 92,
       height: 30,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          Positioned(
+          const Positioned(
             left: 0,
-            child: _AvatarCircle(
-              backgroundColor: Color(0xFF174EA6),
-            ),
+            child: _AvatarCircle(backgroundColor: Color(0xFF174EA6)),
           ),
-          Positioned(
+          const Positioned(
             left: 16,
-            child: _AvatarCircle(
-              backgroundColor: Color(0xFFF4A62A),
-            ),
+            child: _AvatarCircle(backgroundColor: Color(0xFFF4A62A)),
           ),
-          Positioned(
+          const Positioned(
             left: 32,
-            child: _AvatarCircle(
-              backgroundColor: Color(0xFFD8C7B8),
-            ),
+            child: _AvatarCircle(backgroundColor: Color(0xFFD8C7B8)),
           ),
           Positioned(
             left: 48,
-            child: _PlusCircle(),
+            child: _PlusCircle(extraCount: extra),
           ),
         ],
       ),
@@ -153,17 +198,16 @@ class _AvatarCircle extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.white,
-          width: 2,
-        ),
+        border: Border.all(color: Colors.white, width: 2),
       ),
     );
   }
 }
 
 class _PlusCircle extends StatelessWidget {
-  const _PlusCircle();
+  final int extraCount;
+
+  const _PlusCircle({required this.extraCount});
 
   @override
   Widget build(BuildContext context) {
@@ -174,16 +218,13 @@ class _PlusCircle extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF58B947),
         shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.white,
-          width: 2,
-        ),
+        border: Border.all(color: Colors.white, width: 2),
       ),
-      child: const Text(
-        '5+',
-        style: TextStyle(
+      child: Text(
+        '+$extraCount',
+        style: const TextStyle(
           color: Colors.white,
-          fontSize: 11,
+          fontSize: 10,
           fontWeight: FontWeight.w700,
         ),
       ),

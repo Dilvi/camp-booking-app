@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../constants/api_constants.dart';
+import '../storage/token_storage.dart';
 import 'api_exception.dart';
 
 class DioClient {
@@ -12,9 +13,21 @@ class DioClient {
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         sendTimeout: const Duration(seconds: 10),
-        headers: {
+        headers: const {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+        },
+      ),
+    );
+
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          final token = await TokenStorage.getToken();
+          if (token != null && token.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+          handler.next(options);
         },
       ),
     );
@@ -51,24 +64,6 @@ class DioClient {
       }) async {
     try {
       return await _dio.post(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-    } on DioException catch (e) {
-      throw _handleDioException(e);
-    }
-  }
-
-  Future<Response<dynamic>> put(
-      String path, {
-        dynamic data,
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-      }) async {
-    try {
-      return await _dio.put(
         path,
         data: data,
         queryParameters: queryParameters,
