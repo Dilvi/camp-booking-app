@@ -85,12 +85,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Фото из лагеря позже реализуем')),
       );
+      return;
     }
 
     if (index == 2) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Профиль позже реализуем')),
-      );
+      Navigator.pushNamed(context, AppRoutes.profile);
     }
   }
 
@@ -153,14 +152,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     ...recommended.map(
                           (camp) => Padding(
                         padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-                        child: CampCard(
-                          title: camp.title,
-                          location: camp.location,
-                          bookedCount: camp.bookedCount,
-                          isFavorite: camp.isFavorite,
-                          imageUrl: camp.imageUrl,
-                          onFavoriteTap: () => _toggleFavorite(camp),
-                        ),
+                            child: CampCard(
+                              title: camp.title,
+                              location: camp.location,
+                              bookedCount: camp.bookedCount,
+                              isFavorite: camp.isFavorite,
+                              imageUrl: camp.imageUrl,
+                              onFavoriteTap: () => _toggleFavorite(camp),
+                              onTap: () async {
+                                final updatedCamp = await Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.campDetail,
+                                  arguments: camp,
+                                );
+
+                                if (updatedCamp is CampModel) {
+                                  setState(() {
+                                    final index = _camps.indexWhere((item) => item.id == updatedCamp.id);
+                                    if (index != -1) {
+                                      _camps[index] = updatedCamp;
+                                    }
+                                  });
+                                }
+                              },
+                            ),
                       ),
                     ),
                 ],

@@ -7,6 +7,7 @@ class CampCard extends StatelessWidget {
   final bool isFavorite;
   final String? imageUrl;
   final VoidCallback onFavoriteTap;
+  final VoidCallback? onTap;
 
   const CampCard({
     super.key,
@@ -16,86 +17,90 @@ class CampCard extends StatelessWidget {
     required this.isFavorite,
     required this.onFavoriteTap,
     this.imageUrl,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(12, 12, 12, 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0xFFE8E8E8)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(18),
-                child: SizedBox(
-                  height: 205,
-                  width: double.infinity,
-                  child: _CampImage(imageUrl: imageUrl),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: const Color(0xFFE8E8E8)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(18),
+                  child: SizedBox(
+                    height: 205,
+                    width: double.infinity,
+                    child: _CampImage(imageUrl: imageUrl),
+                  ),
                 ),
-              ),
-              Positioned(
-                top: 12,
-                right: 12,
-                child: GestureDetector(
-                  onTap: onFavoriteTap,
-                  child: Container(
-                    width: 42,
-                    height: 42,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite
-                          ? const Color(0xFFE54B4B)
-                          : const Color(0xFF1E1E1E),
-                      size: 22,
+                Positioned(
+                  top: 12,
+                  right: 12,
+                  child: GestureDetector(
+                    onTap: onFavoriteTap,
+                    child: Container(
+                      width: 42,
+                      height: 42,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: isFavorite
+                            ? const Color(0xFFE54B4B)
+                            : const Color(0xFF1E1E1E),
+                        size: 22,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Colors.black,
+              ],
             ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              const Icon(
-                Icons.location_on_outlined,
-                size: 20,
-                color: Color(0xFF57B44B),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
               ),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(
-                  location,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color: Color(0xFF7A7A7A),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(
+                  Icons.location_on_outlined,
+                  size: 20,
+                  color: Color(0xFF57B44B),
+                ),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    location,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Color(0xFF7A7A7A),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              _BookedUsers(bookedCount: bookedCount),
-            ],
-          ),
-        ],
+                const SizedBox(width: 12),
+                _BookedUsers(bookedCount: bookedCount),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
