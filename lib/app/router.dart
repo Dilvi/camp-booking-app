@@ -15,6 +15,7 @@ import '../features/children/presentation/screens/children_screen.dart';
 import '../features/children/presentation/screens/child_form_screen.dart';
 import '../features/children/data/models/child_model.dart';
 import '../features/favorites/presentation/screens/favorites_screen.dart';
+import '../features/profile/presentation/screens/more_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -31,6 +32,7 @@ class AppRoutes {
   static const String addChild = '/add-child';
   static const String editChild = '/edit-child';
   static const String favorites = '/favorites-screen';
+  static const String more = '/more-screen';
 }
 
 class AppRouter {
@@ -56,6 +58,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ChildrenScreen());
       case AppRoutes.favorites:
         return MaterialPageRoute(builder: (_) => const FavoritesScreen());
+      case AppRoutes.more:
+        return MaterialPageRoute(builder: (_) => const MoreScreen());
 
       case AppRoutes.addChild:
         return MaterialPageRoute(builder: (_) => const ChildFormScreen());

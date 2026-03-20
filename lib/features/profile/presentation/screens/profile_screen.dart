@@ -225,7 +225,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _ProfileMenuTile(
             icon: Icons.more_vert,
             title: 'Больше',
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.more);
+            },
           ),
           const SizedBox(height: 18),
           _ProfileMenuTile(
