@@ -10,6 +10,7 @@ class ApiConstants {
   static const String profile = '/profile';
   static const String changePassword = '/profile/password';
   static const String children = '/children';
+  static const String favorites = '/favorites';
 
   static String favoriteByCampId(int campId) => '/favorites/$campId';
   static String childById(int childId) => '/children/$childId';

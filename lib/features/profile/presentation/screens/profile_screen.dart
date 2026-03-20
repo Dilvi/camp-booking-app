@@ -217,7 +217,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _ProfileMenuTile(
             icon: Icons.favorite_border,
             title: 'Избранное',
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.favorites);
+            },
           ),
           const SizedBox(height: 18),
           _ProfileMenuTile(
