@@ -203,7 +203,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _ProfileMenuTile(
             icon: Icons.group_outlined,
             title: 'Дети',
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.children);
+            },
           ),
           const SizedBox(height: 18),
           _ProfileMenuTile(

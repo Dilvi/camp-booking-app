@@ -11,6 +11,9 @@ import '../features/profile/presentation/screens/profile_screen.dart';
 import '../features/profile/presentation/screens/change_password_screen.dart';
 import '../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../features/profile/data/models/profile_model.dart';
+import '../features/children/presentation/screens/children_screen.dart';
+import '../features/children/presentation/screens/child_form_screen.dart';
+import '../features/children/data/models/child_model.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -23,6 +26,9 @@ class AppRoutes {
   static const String profile = '/profile-screen';
   static const String changePassword = '/change-password';
   static const String editProfile = '/edit-profile';
+  static const String children = '/children-screen';
+  static const String addChild = '/add-child';
+  static const String editChild = '/edit-child';
 }
 
 class AppRouter {
@@ -44,6 +50,24 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ProfileScreen());
       case AppRoutes.changePassword:
         return MaterialPageRoute(builder: (_) => const ChangePasswordScreen());
+      case AppRoutes.children:
+        return MaterialPageRoute(builder: (_) => const ChildrenScreen());
+
+      case AppRoutes.addChild:
+        return MaterialPageRoute(builder: (_) => const ChildFormScreen());
+
+      case AppRoutes.editChild:
+        final args = settings.arguments;
+        if (args is! ChildModel) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('Ребёнок не передан')),
+            ),
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) => ChildFormScreen(child: args),
+        );
       case AppRoutes.editProfile:
         final args = settings.arguments;
         if (args is! ProfileModel) {

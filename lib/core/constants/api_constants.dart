@@ -9,6 +9,8 @@ class ApiConstants {
   static const String bookings = '/bookings';
   static const String profile = '/profile';
   static const String changePassword = '/profile/password';
+  static const String children = '/children';
 
   static String favoriteByCampId(int campId) => '/favorites/$campId';
+  static String childById(int childId) => '/children/$childId';
 }

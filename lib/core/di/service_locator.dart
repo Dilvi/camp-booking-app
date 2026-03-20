@@ -3,6 +3,7 @@ import '../../features/auth/data/services/auth_api_service.dart';
 import '../../features/camps/data/services/camps_api_service.dart';
 import '../../features/favorites/data/services/favorites_api_service.dart';
 import '../../features/profile/data/services/profile_api_service.dart';
+import '../../features/children/data/services/children_api_service.dart';
 
 class ServiceLocator {
   ServiceLocator._();
@@ -14,4 +15,5 @@ class ServiceLocator {
   static final FavoritesApiService favoritesApiService =
   FavoritesApiService(dioClient);
   static final ProfileApiService profileApiService = ProfileApiService(dioClient);
+  static final ChildrenApiService childrenApiService = ChildrenApiService(dioClient);
 }
