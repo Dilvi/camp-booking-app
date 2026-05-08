@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import '../../../../app/router.dart';
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/network/api_exception.dart';
+import '../../../../core/storage/token_storage.dart';
+import '../../../children/data/models/child_model.dart';
 import '../../data/models/camp_model.dart';
 
 class CampDetailScreen extends StatefulWidget {
   final CampModel camp;
 
-  const CampDetailScreen({
-    super.key,
-    required this.camp,
-  });
+  const CampDetailScreen({super.key, required this.camp});
 
   @override
   State<CampDetailScreen> createState() => _CampDetailScreenState();
@@ -17,6 +18,7 @@ class CampDetailScreen extends StatefulWidget {
 class _CampDetailScreenState extends State<CampDetailScreen> {
   late CampModel camp;
   bool _isDescriptionExpanded = false;
+  bool _isBooking = false;
 
   @override
   void initState() {
@@ -44,9 +46,7 @@ class _CampDetailScreenState extends State<CampDetailScreen> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Не удалось обновить избранное'),
-        ),
+        const SnackBar(content: Text('Не удалось обновить избранное')),
       );
     }
   }
@@ -54,7 +54,7 @@ class _CampDetailScreenState extends State<CampDetailScreen> {
   String _formatPrice(int price) {
     final text = price.toString().replaceAllMapped(
       RegExp(r'(\d)(?=(\d{3})+$)'),
-          (match) => '${match[1]} ',
+      (match) => '${match[1]} ',
     );
     return '$text ₽';
   }
@@ -66,6 +66,147 @@ class _CampDetailScreenState extends State<CampDetailScreen> {
       return camp.description;
     }
     return '${camp.description.substring(0, 170)}...';
+  }
+
+  Future<void> _startBooking() async {
+    if (_isBooking) return;
+
+    setState(() {
+      _isBooking = true;
+    });
+
+    try {
+      final children = await ServiceLocator.childrenApiService.getChildren();
+
+      if (!mounted) return;
+      setState(() {
+        _isBooking = false;
+      });
+
+      final selectedChild =
+          children.isEmpty
+              ? await _showNoChildrenDialog()
+              : await _showChildPicker(children);
+
+      if (selectedChild == null) return;
+
+      if (!mounted) return;
+      setState(() {
+        _isBooking = true;
+      });
+
+      final booking = await ServiceLocator.bookingApiService.createBooking(
+        campId: camp.id,
+        childId: selectedChild.id,
+      );
+
+      if (!mounted) return;
+      await _showBookingSuccessDialog(booking.id);
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      if (e.statusCode == 401) {
+        await _goToLogin();
+        return;
+      }
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_messageForStatus(e))));
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Не удалось создать бронь')));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isBooking = false;
+        });
+      }
+    }
+  }
+
+  Future<ChildModel?> _showChildPicker(List<ChildModel> children) {
+    return showModalBottomSheet<ChildModel>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _ChildPickerSheet(children: children),
+    );
+  }
+
+  Future<ChildModel?> _showNoChildrenDialog() async {
+    final shouldCreate = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Выберите ребёнка'),
+            content: const Text(
+              'Для бронирования нужно добавить профиль ребёнка.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Отмена'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Добавить'),
+              ),
+            ],
+          ),
+    );
+
+    if (shouldCreate != true || !mounted) return null;
+
+    final result = await Navigator.pushNamed(context, AppRoutes.addChild);
+    if (result is ChildModel) return result;
+    return null;
+  }
+
+  Future<void> _showBookingSuccessDialog(int bookingId) {
+    final rootContext = context;
+
+    return showDialog<void>(
+      context: context,
+      builder:
+          (dialogContext) => AlertDialog(
+            title: const Text('Бронь создана'),
+            content: Text('Бронирование #$bookingId создано. Статус: pending.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text('Остаться'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                  Navigator.pushNamed(rootContext, AppRoutes.bookings);
+                },
+                child: const Text('Мои бронирования'),
+              ),
+            ],
+          ),
+    );
+  }
+
+  Future<void> _goToLogin() async {
+    await TokenStorage.clearToken();
+
+    if (!mounted) return;
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.login,
+      (route) => false,
+    );
+  }
+
+  String _messageForStatus(ApiException e) {
+    switch (e.statusCode) {
+      case 404:
+        return 'Бронь или маршрут не найдены';
+      default:
+        return e.message;
+    }
   }
 
   @override
@@ -81,9 +222,7 @@ class _CampDetailScreenState extends State<CampDetailScreen> {
                   height: 340,
                   child: Stack(
                     children: [
-                      const Positioned.fill(
-                        child: SizedBox(),
-                      ),
+                      const Positioned.fill(child: SizedBox()),
                       Positioned.fill(
                         child: ClipRRect(
                           borderRadius: const BorderRadius.only(
@@ -105,12 +244,14 @@ class _CampDetailScreenState extends State<CampDetailScreen> {
                         top: 52,
                         right: 20,
                         child: _CircleIconButton(
-                          icon: camp.isFavorite
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          iconColor: camp.isFavorite
-                              ? const Color(0xFFE54B4B)
-                              : Colors.black,
+                          icon:
+                              camp.isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                          iconColor:
+                              camp.isFavorite
+                                  ? const Color(0xFFE54B4B)
+                                  : Colors.black,
                           onTap: _toggleFavorite,
                         ),
                       ),
@@ -244,7 +385,7 @@ class _CampDetailScreenState extends State<CampDetailScreen> {
                                   onTap: () {
                                     setState(() {
                                       _isDescriptionExpanded =
-                                      !_isDescriptionExpanded;
+                                          !_isDescriptionExpanded;
                                     });
                                   },
                                   child: Padding(
@@ -361,7 +502,7 @@ class _CampDetailScreenState extends State<CampDetailScreen> {
                       const _ReviewCard(
                         name: 'Марина Максимова',
                         text:
-                        'Вожатые очень добрые, всегда поддержат, помогут, объяснят.',
+                            'Вожатые очень добрые, всегда поддержат, помогут, объяснят.',
                         date: '01 Июл, 2025',
                         imageAssetPath: 'assets/images/review_3.jpg',
                       ),
@@ -378,28 +519,33 @@ class _CampDetailScreenState extends State<CampDetailScreen> {
             child: SizedBox(
               height: 56,
               child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Бронирование позже реализуем'),
-                    ),
-                  );
-                },
+                onPressed: _isBooking ? null : _startBooking,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF4CAF3D),
                   foregroundColor: Colors.white,
+                  disabledBackgroundColor: const Color(0xFFA5D6A7),
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                child: const Text(
-                  'Забронировать',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+                child:
+                    _isBooking
+                        ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.4,
+                            color: Colors.white,
+                          ),
+                        )
+                        : const Text(
+                          'Забронировать',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
               ),
             ),
           ),
@@ -420,26 +566,23 @@ class _DetailHeaderImage extends StatelessWidget {
       return Container(
         color: const Color(0xFFD9D9D9),
         alignment: Alignment.center,
-        child: const Icon(
-          Icons.image_outlined,
-          size: 56,
-          color: Colors.white,
-        ),
+        child: const Icon(Icons.image_outlined, size: 56, color: Colors.white),
       );
     }
 
     return Image.network(
       imageUrl!,
       fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => Container(
-        color: const Color(0xFFD9D9D9),
-        alignment: Alignment.center,
-        child: const Icon(
-          Icons.broken_image_outlined,
-          size: 56,
-          color: Colors.white,
-        ),
-      ),
+      errorBuilder:
+          (_, __, ___) => Container(
+            color: const Color(0xFFD9D9D9),
+            alignment: Alignment.center,
+            child: const Icon(
+              Icons.broken_image_outlined,
+              size: 56,
+              color: Colors.white,
+            ),
+          ),
     );
   }
 }
@@ -466,11 +609,7 @@ class _CircleIconButton extends StatelessWidget {
         child: SizedBox(
           width: 40,
           height: 40,
-          child: Icon(
-            icon,
-            size: 18,
-            color: iconColor,
-          ),
+          child: Icon(icon, size: 18, color: iconColor),
         ),
       ),
     );
@@ -523,15 +662,16 @@ class _JoinedCard extends StatelessWidget {
               child: Image.asset(
                 'assets/images/camp_detail_map.png',
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  color: const Color(0xFFCAD8BD),
-                  alignment: Alignment.center,
-                  child: const Icon(
-                    Icons.map_outlined,
-                    color: Colors.white,
-                    size: 34,
-                  ),
-                ),
+                errorBuilder:
+                    (_, __, ___) => Container(
+                      color: const Color(0xFFCAD8BD),
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.map_outlined,
+                        color: Colors.white,
+                        size: 34,
+                      ),
+                    ),
               ),
             ),
           ),
@@ -557,27 +697,18 @@ class _JoinedUsers extends StatelessWidget {
         children: [
           const Positioned(
             left: 0,
-            child: _JoinedAvatar(
-              imageAssetPath: 'assets/images/review_1.jpg',
-            ),
+            child: _JoinedAvatar(imageAssetPath: 'assets/images/review_1.jpg'),
           ),
           const Positioned(
             left: 28,
-            child: _JoinedAvatar(
-              imageAssetPath: 'assets/images/review_2.jpg',
-            ),
+            child: _JoinedAvatar(imageAssetPath: 'assets/images/review_2.jpg'),
           ),
           const Positioned(
             left: 56,
-            child: _JoinedAvatar(
-              imageAssetPath: 'assets/images/review_3.jpg',
-            ),
+            child: _JoinedAvatar(imageAssetPath: 'assets/images/review_3.jpg'),
           ),
           if (bookedCount > 3)
-            Positioned(
-              left: 84,
-              child: _JoinedPlus(extraCount: extraCount),
-            ),
+            Positioned(left: 84, child: _JoinedPlus(extraCount: extraCount)),
         ],
       ),
     );
@@ -602,9 +733,8 @@ class _JoinedAvatar extends StatelessWidget {
         child: Image.asset(
           imageAssetPath,
           fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => Container(
-            color: const Color(0xFFD9D9D9),
-          ),
+          errorBuilder:
+              (_, __, ___) => Container(color: const Color(0xFFD9D9D9)),
         ),
       ),
     );
@@ -643,10 +773,7 @@ class _InfoCard extends StatelessWidget {
   final String title;
   final String value;
 
-  const _InfoCard({
-    required this.title,
-    required this.value,
-  });
+  const _InfoCard({required this.title, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -740,9 +867,8 @@ class _ReviewCard extends StatelessWidget {
               child: Image.asset(
                 imageAssetPath,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  color: const Color(0xFFD9D9D9),
-                ),
+                errorBuilder:
+                    (_, __, ___) => Container(color: const Color(0xFFD9D9D9)),
               ),
             ),
           ),
@@ -811,6 +937,84 @@ class _ReviewCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ChildPickerSheet extends StatelessWidget {
+  final List<ChildModel> children;
+
+  const _ChildPickerSheet({required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 56,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8E8E8),
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            const SizedBox(height: 18),
+            const Text(
+              'Выберите ребёнка',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 14),
+            Flexible(
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: children.length,
+                separatorBuilder: (_, __) => const Divider(height: 1),
+                itemBuilder: (context, index) {
+                  final child = children[index];
+                  return ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: CircleAvatar(
+                      backgroundColor: const Color(0xFFD9D9D9),
+                      backgroundImage:
+                          child.photoUrl != null && child.photoUrl!.isNotEmpty
+                              ? NetworkImage(child.photoUrl!)
+                              : null,
+                      child:
+                          child.photoUrl == null || child.photoUrl!.isEmpty
+                              ? const Icon(Icons.person, color: Colors.white)
+                              : null,
+                    ),
+                    title: Text(
+                      child.fullName.isEmpty
+                          ? 'Ребёнок #${child.id}'
+                          : child.fullName,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    subtitle: Text('child_id: ${child.id}'),
+                    onTap: () => Navigator.pop(context, child),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

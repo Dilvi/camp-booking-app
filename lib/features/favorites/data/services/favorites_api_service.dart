@@ -25,12 +25,7 @@ class FavoritesApiService {
       if (list is List) {
         return list
             .whereType<Map<String, dynamic>>()
-            .map(
-              (json) => CampModel.fromJson({
-            ...json,
-            'is_favorite': true,
-          }),
-        )
+            .map((json) => CampModel.fromJson({...json, 'is_favorite': true}))
             .toList();
       }
     }

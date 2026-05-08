@@ -32,30 +32,29 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       final favorites = await ServiceLocator.favoritesApiService.getFavorites();
       final allCamps = await ServiceLocator.campsApiService.getCamps();
 
-      final campsById = {
-        for (final camp in allCamps) camp.id: camp,
-      };
+      final campsById = {for (final camp in allCamps) camp.id: camp};
 
-      final mergedFavorites = favorites.map((favorite) {
-        final fullCamp = campsById[favorite.id];
-        if (fullCamp == null) return favorite;
+      final mergedFavorites =
+          favorites.map((favorite) {
+            final fullCamp = campsById[favorite.id];
+            if (fullCamp == null) return favorite;
 
-        return CampModel(
-          id: favorite.id,
-          title: favorite.title,
-          location: favorite.location,
-          pricePerDay: favorite.pricePerDay,
-          bookedCount: favorite.bookedCount,
-          description: favorite.description,
-          shiftDurationDays: favorite.shiftDurationDays,
-          ageMin: favorite.ageMin,
-          ageMax: favorite.ageMax,
-          campType: favorite.campType,
-          foodType: favorite.foodType,
-          imageUrl: fullCamp.imageUrl,
-          isFavorite: true,
-        );
-      }).toList();
+            return CampModel(
+              id: favorite.id,
+              title: favorite.title,
+              location: favorite.location,
+              pricePerDay: favorite.pricePerDay,
+              bookedCount: favorite.bookedCount,
+              description: favorite.description,
+              shiftDurationDays: favorite.shiftDurationDays,
+              ageMin: favorite.ageMin,
+              ageMax: favorite.ageMax,
+              campType: favorite.campType,
+              foodType: favorite.foodType,
+              imageUrl: fullCamp.imageUrl,
+              isFavorite: true,
+            );
+          }).toList();
 
       if (!mounted) return;
       setState(() {
@@ -80,9 +79,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         _favorites.removeWhere((item) => item.id == camp.id);
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Удалено из избранного')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Удалено из избранного')));
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -185,9 +184,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         physics: AlwaysScrollableScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.only(top: 120),
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
+          child: Center(child: CircularProgressIndicator()),
         ),
       );
     }
@@ -200,10 +197,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           children: [
             Text(
               _error!,
-              style: const TextStyle(
-                color: Colors.red,
-                fontSize: 16,
-              ),
+              style: const TextStyle(color: Colors.red, fontSize: 16),
             ),
             const SizedBox(height: 12),
             ElevatedButton(
@@ -253,10 +247,7 @@ class _CircleButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const _CircleButton({
-    required this.icon,
-    required this.onTap,
-  });
+  const _CircleButton({required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -269,11 +260,7 @@ class _CircleButton extends StatelessWidget {
         child: SizedBox(
           width: 40,
           height: 40,
-          child: Icon(
-            icon,
-            size: 18,
-            color: Colors.black,
-          ),
+          child: Icon(icon, size: 18, color: Colors.black),
         ),
       ),
     );
@@ -303,11 +290,12 @@ class _EmptyFavoritesState extends StatelessWidget {
                   'assets/icons/favorites_empty_icon.png',
                   width: 42,
                   height: 42,
-                  errorBuilder: (_, __, ___) => const Icon(
-                    Icons.favorite_border,
-                    size: 44,
-                    color: Color(0xFF17A34A),
-                  ),
+                  errorBuilder:
+                      (_, __, ___) => const Icon(
+                        Icons.favorite_border,
+                        size: 44,
+                        color: Color(0xFF17A34A),
+                      ),
                 ),
               ),
             ),
@@ -315,10 +303,7 @@ class _EmptyFavoritesState extends StatelessWidget {
             const Text(
               'Избранных еще нет!',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 12),
             const Text(
@@ -349,10 +334,7 @@ class _EmptyFavoritesState extends StatelessWidget {
                 ),
                 child: const Text(
                   'Добавить',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
               ),
             ),

@@ -51,12 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
 
           /// центр — логотип
-          Center(
-            child: Image.asset(
-              'assets/images/logo.png',
-              width: 180,
-            ),
-          ),
+          Center(child: Image.asset('assets/images/logo.png', width: 180)),
 
           /// палатки снизу (заходят под навбар)
           Positioned(

@@ -45,10 +45,7 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
   }
 
   Future<void> _openCreateChild() async {
-    final result = await Navigator.pushNamed(
-      context,
-      AppRoutes.addChild,
-    );
+    final result = await Navigator.pushNamed(context, AppRoutes.addChild);
 
     if (!mounted) return;
 
@@ -57,9 +54,9 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
         _children.add(result);
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ребёнок успешно добавлен')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Ребёнок успешно добавлен')));
     }
   }
 
@@ -80,9 +77,9 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
         }
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Профиль ребёнка обновлён')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Профиль ребёнка обновлён')));
     }
   }
 
@@ -103,9 +100,9 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
         _children.removeWhere((e) => e.id == child.id);
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ребёнок удалён')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Ребёнок удалён')));
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -118,16 +115,17 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (_) => _ChildActionsSheet(
-        onEdit: () {
-          Navigator.pop(context);
-          _openEditChild(child);
-        },
-        onDelete: () {
-          Navigator.pop(context);
-          _deleteChild(child);
-        },
-      ),
+      builder:
+          (_) => _ChildActionsSheet(
+            onEdit: () {
+              Navigator.pop(context);
+              _openEditChild(child);
+            },
+            onDelete: () {
+              Navigator.pop(context);
+              _deleteChild(child);
+            },
+          ),
     );
   }
 
@@ -175,10 +173,7 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
                           ),
                         ),
                       ),
-                      _CircleButton(
-                        icon: Icons.add,
-                        onTap: _openCreateChild,
-                      ),
+                      _CircleButton(icon: Icons.add, onTap: _openCreateChild),
                     ],
                   ),
                 ),
@@ -203,9 +198,7 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
         physics: AlwaysScrollableScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.only(top: 120),
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
+          child: Center(child: CircularProgressIndicator()),
         ),
       );
     }
@@ -218,10 +211,7 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
           children: [
             Text(
               _error!,
-              style: const TextStyle(
-                color: Colors.red,
-                fontSize: 16,
-              ),
+              style: const TextStyle(color: Colors.red, fontSize: 16),
             ),
             const SizedBox(height: 12),
             ElevatedButton(
@@ -266,10 +256,7 @@ class _CircleButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const _CircleButton({
-    required this.icon,
-    required this.onTap,
-  });
+  const _CircleButton({required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -282,11 +269,7 @@ class _CircleButton extends StatelessWidget {
         child: SizedBox(
           width: 40,
           height: 40,
-          child: Icon(
-            icon,
-            size: 18,
-            color: Colors.black,
-          ),
+          child: Icon(icon, size: 18, color: Colors.black),
         ),
       ),
     );
@@ -297,10 +280,7 @@ class _ChildTile extends StatelessWidget {
   final ChildModel child;
   final VoidCallback onMoreTap;
 
-  const _ChildTile({
-    required this.child,
-    required this.onMoreTap,
-  });
+  const _ChildTile({required this.child, required this.onMoreTap});
 
   @override
   Widget build(BuildContext context) {
@@ -326,10 +306,7 @@ class _ChildTile extends StatelessWidget {
               ),
             ),
           ),
-          IconButton(
-            onPressed: onMoreTap,
-            icon: const Icon(Icons.more_vert),
-          ),
+          IconButton(onPressed: onMoreTap, icon: const Icon(Icons.more_vert)),
         ],
       ),
     );
@@ -347,21 +324,23 @@ class _ChildAvatar extends StatelessWidget {
       child: SizedBox(
         width: 46,
         height: 46,
-        child: photoUrl != null && photoUrl!.isNotEmpty
-            ? Image.network(
-          photoUrl!,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => Container(
-            color: const Color(0xFFD9D9D9),
-            alignment: Alignment.center,
-            child: const Icon(Icons.person, color: Colors.white),
-          ),
-        )
-            : Container(
-          color: const Color(0xFFD9D9D9),
-          alignment: Alignment.center,
-          child: const Icon(Icons.person, color: Colors.white),
-        ),
+        child:
+            photoUrl != null && photoUrl!.isNotEmpty
+                ? Image.network(
+                  photoUrl!,
+                  fit: BoxFit.cover,
+                  errorBuilder:
+                      (_, __, ___) => Container(
+                        color: const Color(0xFFD9D9D9),
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.person, color: Colors.white),
+                      ),
+                )
+                : Container(
+                  color: const Color(0xFFD9D9D9),
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.person, color: Colors.white),
+                ),
       ),
     );
   }
@@ -392,21 +371,19 @@ class _EmptyChildrenState extends StatelessWidget {
                   'assets/icons/children_empty_icon.png',
                   width: 44,
                   height: 44,
-                  errorBuilder: (_, __, ___) => const Icon(
-                    Icons.group_add_outlined,
-                    size: 48,
-                    color: Color(0xFF17A34A),
-                  ),
+                  errorBuilder:
+                      (_, __, ___) => const Icon(
+                        Icons.group_add_outlined,
+                        size: 48,
+                        color: Color(0xFF17A34A),
+                      ),
                 ),
               ),
             ),
             const SizedBox(height: 28),
             const Text(
               'Добавить ребёнка',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 10),
             const Text(
@@ -434,10 +411,7 @@ class _EmptyChildrenState extends StatelessWidget {
                 ),
                 child: const Text(
                   'Добавить',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
               ),
             ),
@@ -452,10 +426,7 @@ class _ChildActionsSheet extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
-  const _ChildActionsSheet({
-    required this.onEdit,
-    required this.onDelete,
-  });
+  const _ChildActionsSheet({required this.onEdit, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -491,10 +462,7 @@ class _ChildActionsSheet extends StatelessWidget {
               title: const Center(
                 child: Text(
                   'Редактировать',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
               onTap: onEdit,
@@ -504,10 +472,7 @@ class _ChildActionsSheet extends StatelessWidget {
               title: const Center(
                 child: Text(
                   'Удалить',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
               onTap: onDelete,
@@ -548,10 +513,7 @@ class _DeleteChildSheet extends StatelessWidget {
             const SizedBox(height: 24),
             const Text(
               'Удалить профиль ребёнка',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 16),
             const Text(

@@ -58,9 +58,10 @@ class CampCard extends StatelessWidget {
                       ),
                       child: Icon(
                         isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: isFavorite
-                            ? const Color(0xFFE54B4B)
-                            : const Color(0xFF1E1E1E),
+                        color:
+                            isFavorite
+                                ? const Color(0xFFE54B4B)
+                                : const Color(0xFF1E1E1E),
                         size: 22,
                       ),
                     ),
@@ -117,11 +118,7 @@ class _CampImage extends StatelessWidget {
       return Container(
         color: const Color(0xFFD9D9D9),
         alignment: Alignment.center,
-        child: const Icon(
-          Icons.image_outlined,
-          color: Colors.white,
-          size: 44,
-        ),
+        child: const Icon(Icons.image_outlined, color: Colors.white, size: 44),
       );
     }
 
@@ -140,15 +137,16 @@ class _CampImage extends StatelessWidget {
           ),
         );
       },
-      errorBuilder: (_, __, ___) => Container(
-        color: const Color(0xFFD9D9D9),
-        alignment: Alignment.center,
-        child: const Icon(
-          Icons.broken_image_outlined,
-          color: Colors.white,
-          size: 44,
-        ),
-      ),
+      errorBuilder:
+          (_, __, ___) => Container(
+            color: const Color(0xFFD9D9D9),
+            alignment: Alignment.center,
+            child: const Icon(
+              Icons.broken_image_outlined,
+              color: Colors.white,
+              size: 44,
+            ),
+          ),
     );
   }
 }
@@ -180,10 +178,7 @@ class _BookedUsers extends StatelessWidget {
             left: 32,
             child: _AvatarCircle(backgroundColor: Color(0xFFD8C7B8)),
           ),
-          Positioned(
-            left: 48,
-            child: _PlusCircle(extraCount: extra),
-          ),
+          Positioned(left: 48, child: _PlusCircle(extraCount: extra)),
         ],
       ),
     );

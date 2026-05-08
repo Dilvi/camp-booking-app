@@ -174,10 +174,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   ),
                   if (_currentPasswordError != null) ...[
                     const SizedBox(height: 6),
-                    Text(
-                      _currentPasswordError!,
-                      style: AppTextStyles.error,
-                    ),
+                    Text(_currentPasswordError!, style: AppTextStyles.error),
                   ],
                   const SizedBox(height: 18),
                   _PasswordField(
@@ -201,10 +198,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   ),
                   if (_newPasswordError != null) ...[
                     const SizedBox(height: 6),
-                    Text(
-                      _newPasswordError!,
-                      style: AppTextStyles.error,
-                    ),
+                    Text(_newPasswordError!, style: AppTextStyles.error),
                   ],
                   if (_serverError != null) ...[
                     const SizedBox(height: 12),
@@ -232,22 +226,23 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      child: _isLoading
-                          ? const SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.4,
-                          color: Colors.white,
-                        ),
-                      )
-                          : const Text(
-                        'Сменить пароль',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+                      child:
+                          _isLoading
+                              ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.4,
+                                  color: Colors.white,
+                                ),
+                              )
+                              : const Text(
+                                'Сменить пароль',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                     ),
                   ),
                 ],
@@ -312,7 +307,9 @@ class _PasswordField extends StatelessWidget {
         suffixIcon: IconButton(
           onPressed: onToggleObscure,
           icon: Icon(
-            obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+            obscureText
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
             color: Colors.black87,
           ),
         ),

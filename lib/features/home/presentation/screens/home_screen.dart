@@ -69,9 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Не удалось обновить избранное'),
-        ),
+        const SnackBar(content: Text('Не удалось обновить избранное')),
       );
     }
   }
@@ -150,32 +148,34 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   else
                     ...recommended.map(
-                          (camp) => Padding(
+                      (camp) => Padding(
                         padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-                            child: CampCard(
-                              title: camp.title,
-                              location: camp.location,
-                              bookedCount: camp.bookedCount,
-                              isFavorite: camp.isFavorite,
-                              imageUrl: camp.imageUrl,
-                              onFavoriteTap: () => _toggleFavorite(camp),
-                              onTap: () async {
-                                final updatedCamp = await Navigator.pushNamed(
-                                  context,
-                                  AppRoutes.campDetail,
-                                  arguments: camp,
-                                );
+                        child: CampCard(
+                          title: camp.title,
+                          location: camp.location,
+                          bookedCount: camp.bookedCount,
+                          isFavorite: camp.isFavorite,
+                          imageUrl: camp.imageUrl,
+                          onFavoriteTap: () => _toggleFavorite(camp),
+                          onTap: () async {
+                            final updatedCamp = await Navigator.pushNamed(
+                              context,
+                              AppRoutes.campDetail,
+                              arguments: camp,
+                            );
 
-                                if (updatedCamp is CampModel) {
-                                  setState(() {
-                                    final index = _camps.indexWhere((item) => item.id == updatedCamp.id);
-                                    if (index != -1) {
-                                      _camps[index] = updatedCamp;
-                                    }
-                                  });
+                            if (updatedCamp is CampModel) {
+                              setState(() {
+                                final index = _camps.indexWhere(
+                                  (item) => item.id == updatedCamp.id,
+                                );
+                                if (index != -1) {
+                                  _camps[index] = updatedCamp;
                                 }
-                              },
-                            ),
+                              });
+                            }
+                          },
+                        ),
                       ),
                     ),
                 ],
@@ -220,9 +220,8 @@ class _HomeHeader extends StatelessWidget {
             child: Image.asset(
               'assets/images/home_header.png',
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                color: const Color(0xFFD8EEF3),
-              ),
+              errorBuilder:
+                  (_, __, ___) => Container(color: const Color(0xFFD8EEF3)),
             ),
           ),
           Padding(
@@ -232,11 +231,7 @@ class _HomeHeader extends StatelessWidget {
               children: [
                 const SizedBox(height: 18),
                 const Center(
-                  child: Icon(
-                    Icons.flight,
-                    size: 26,
-                    color: Color(0xFF3E1A16),
-                  ),
+                  child: Icon(Icons.flight, size: 26, color: Color(0xFF3E1A16)),
                 ),
                 const Spacer(),
                 const Text(
@@ -259,11 +254,7 @@ class _HomeHeader extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: const Row(
                       children: [
-                        Icon(
-                          Icons.search,
-                          color: Colors.black87,
-                          size: 24,
-                        ),
+                        Icon(Icons.search, color: Colors.black87, size: 24),
                         SizedBox(width: 10),
                         Text(
                           'Поиск лагеря',
@@ -293,9 +284,7 @@ class _NearestCampCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 88,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
       child: Stack(
         children: [
           Positioned.fill(
@@ -304,9 +293,8 @@ class _NearestCampCard extends StatelessWidget {
               child: Image.asset(
                 'assets/images/nearest_camp_bg.png',
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  color: const Color(0xFFEFF3E7),
-                ),
+                errorBuilder:
+                    (_, __, ___) => Container(color: const Color(0xFFEFF3E7)),
               ),
             ),
           ),
@@ -329,17 +317,16 @@ class _NearestCampCard extends StatelessWidget {
                       SizedBox(height: 6),
                       Text(
                         'Укажи местоположение',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black87,
-                        ),
+                        style: TextStyle(fontSize: 14, color: Colors.black87),
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 12,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF4CAF3D),
                     borderRadius: BorderRadius.circular(16),
@@ -371,14 +358,13 @@ class _CitiesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: cities
-          .map(
-            (city) => _CityItem(
-          title: city.title,
-          assetPath: city.assetPath,
-        ),
-      )
-          .toList(),
+      children:
+          cities
+              .map(
+                (city) =>
+                    _CityItem(title: city.title, assetPath: city.assetPath),
+              )
+              .toList(),
     );
   }
 }
@@ -387,10 +373,7 @@ class _CityItem extends StatelessWidget {
   final String title;
   final String assetPath;
 
-  const _CityItem({
-    required this.title,
-    required this.assetPath,
-  });
+  const _CityItem({required this.title, required this.assetPath});
 
   @override
   Widget build(BuildContext context) {
@@ -404,14 +387,12 @@ class _CityItem extends StatelessWidget {
             child: Image.asset(
               assetPath,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                color: const Color(0xFFD9D9D9),
-                alignment: Alignment.center,
-                child: const Icon(
-                  Icons.location_city,
-                  color: Colors.white,
-                ),
-              ),
+              errorBuilder:
+                  (_, __, ___) => Container(
+                    color: const Color(0xFFD9D9D9),
+                    alignment: Alignment.center,
+                    child: const Icon(Icons.location_city, color: Colors.white),
+                  ),
             ),
           ),
         ),
@@ -464,10 +445,7 @@ class _SectionHeader extends StatelessWidget {
             ),
             child: Text(
               actionText,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.black87,
-              ),
+              style: const TextStyle(fontSize: 14, color: Colors.black87),
             ),
           ),
         ),
@@ -480,8 +458,5 @@ class _CityMock {
   final String title;
   final String assetPath;
 
-  const _CityMock({
-    required this.title,
-    required this.assetPath,
-  });
+  const _CityMock({required this.title, required this.assetPath});
 }

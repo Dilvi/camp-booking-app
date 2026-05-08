@@ -65,9 +65,7 @@ class _AllCampsScreenState extends State<AllCampsScreen> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Не удалось обновить избранное'),
-        ),
+        const SnackBar(content: Text('Не удалось обновить избранное')),
       );
     }
   }
@@ -129,9 +127,7 @@ class _AllCampsScreenState extends State<AllCampsScreen> {
 
   Widget _buildBody() {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_error != null) {
@@ -141,16 +137,10 @@ class _AllCampsScreenState extends State<AllCampsScreen> {
         children: [
           Text(
             _error!,
-            style: const TextStyle(
-              color: Colors.red,
-              fontSize: 16,
-            ),
+            style: const TextStyle(color: Colors.red, fontSize: 16),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: _loadCamps,
-            child: const Text('Повторить'),
-          ),
+          ElevatedButton(onPressed: _loadCamps, child: const Text('Повторить')),
         ],
       );
     }
@@ -164,10 +154,7 @@ class _AllCampsScreenState extends State<AllCampsScreen> {
           Center(
             child: Text(
               'Лагеря не найдены',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black87,
-              ),
+              style: TextStyle(fontSize: 18, color: Colors.black87),
             ),
           ),
         ],
@@ -198,7 +185,9 @@ class _AllCampsScreenState extends State<AllCampsScreen> {
 
             if (updatedCamp is CampModel) {
               setState(() {
-                final index = _camps.indexWhere((item) => item.id == updatedCamp.id);
+                final index = _camps.indexWhere(
+                  (item) => item.id == updatedCamp.id,
+                );
                 if (index != -1) {
                   _camps[index] = updatedCamp;
                 }

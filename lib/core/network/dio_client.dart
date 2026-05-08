@@ -33,18 +33,15 @@ class DioClient {
     );
 
     _dio.interceptors.add(
-      LogInterceptor(
-        requestBody: true,
-        responseBody: true,
-      ),
+      LogInterceptor(requestBody: true, responseBody: true),
     );
   }
 
   Future<Response<dynamic>> get(
-      String path, {
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-      }) async {
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+  }) async {
     try {
       return await _dio.get(
         path,
@@ -57,11 +54,11 @@ class DioClient {
   }
 
   Future<Response<dynamic>> post(
-      String path, {
-        dynamic data,
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-      }) async {
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+  }) async {
     try {
       return await _dio.post(
         path,
@@ -75,11 +72,11 @@ class DioClient {
   }
 
   Future<Response<dynamic>> put(
-      String path, {
-        dynamic data,
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-      }) async {
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+  }) async {
     try {
       return await _dio.put(
         path,
@@ -93,11 +90,11 @@ class DioClient {
   }
 
   Future<Response<dynamic>> delete(
-      String path, {
-        dynamic data,
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-      }) async {
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+  }) async {
     try {
       return await _dio.delete(
         path,
@@ -126,9 +123,6 @@ class DioClient {
       message = e.message!;
     }
 
-    return ApiException(
-      message: message,
-      statusCode: statusCode,
-    );
+    return ApiException(message: message, statusCode: statusCode);
   }
 }

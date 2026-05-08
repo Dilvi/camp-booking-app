@@ -14,4 +14,11 @@ class ApiConstants {
 
   static String favoriteByCampId(int campId) => '/favorites/$campId';
   static String childById(int childId) => '/children/$childId';
+  static String bookingById(int bookingId) => '/bookings/$bookingId';
+  static String bikeRoutesByBookingId(int bookingId) =>
+      '/bookings/$bookingId/bike-routes';
+  static String bikeRouteAnalysis({
+    required int bookingId,
+    required int routeId,
+  }) => '/bookings/$bookingId/bike-routes/$routeId/ai-analysis';
 }

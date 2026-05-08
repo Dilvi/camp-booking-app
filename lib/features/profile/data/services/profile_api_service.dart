@@ -31,10 +31,7 @@ class ProfileApiService {
   }) async {
     final response = await _dioClient.put(
       ApiConstants.changePassword,
-      data: {
-        'current_password': currentPassword,
-        'new_password': newPassword,
-      },
+      data: {'current_password': currentPassword, 'new_password': newPassword},
     );
 
     final data = response.data;

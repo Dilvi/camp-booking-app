@@ -71,19 +71,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _validatePhone() {
     if (!_phoneTouched) return;
     final value = _phoneController.text.trim();
-    _phoneError = value.isEmpty || !_isPhoneValid ? 'Введите корректный номер телефона' : null;
+    _phoneError =
+        value.isEmpty || !_isPhoneValid
+            ? 'Введите корректный номер телефона'
+            : null;
   }
 
   void _validateEmail() {
     if (!_emailTouched) return;
     final value = _emailController.text.trim();
-    _emailError = value.isEmpty || !_isEmailValid ? 'Введите корректный email' : null;
+    _emailError =
+        value.isEmpty || !_isEmailValid ? 'Введите корректный email' : null;
   }
 
   void _validatePassword() {
     if (!_passwordTouched) return;
     final value = _passwordController.text;
-    _passwordError = value.isEmpty || !_isPasswordValid ? 'Пароль должен быть не менее 8 символов' : null;
+    _passwordError =
+        value.isEmpty || !_isPasswordValid
+            ? 'Пароль должен быть не менее 8 символов'
+            : null;
   }
 
   bool _validateForm() {
@@ -205,10 +212,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(height: 26),
-                  const Text(
-                    'Регистрация',
-                    style: AppTextStyles.loginTitle,
-                  ),
+                  const Text('Регистрация', style: AppTextStyles.loginTitle),
                   const SizedBox(height: 10),
                   const Text(
                     'Привет! Укажи свои данные',
@@ -322,19 +326,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      child: _isLoading
-                          ? const SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.4,
-                          color: Colors.white,
-                        ),
-                      )
-                          : const Text(
-                        'Зарегистрироваться',
-                        style: AppTextStyles.primaryButton,
-                      ),
+                      child:
+                          _isLoading
+                              ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.4,
+                                  color: Colors.white,
+                                ),
+                              )
+                              : const Text(
+                                'Зарегистрироваться',
+                                style: AppTextStyles.primaryButton,
+                              ),
                     ),
                   ),
                   const SizedBox(height: 22),
@@ -483,18 +488,11 @@ class _PhoneTextField extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 6),
-              Icon(
-                Icons.keyboard_arrow_down,
-                size: 18,
-                color: Colors.black,
-              ),
+              Icon(Icons.keyboard_arrow_down, size: 18, color: Colors.black),
             ],
           ),
         ),
-        prefixIconConstraints: const BoxConstraints(
-          minWidth: 0,
-          minHeight: 0,
-        ),
+        prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(

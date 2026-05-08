@@ -16,6 +16,8 @@ import '../features/children/presentation/screens/child_form_screen.dart';
 import '../features/children/data/models/child_model.dart';
 import '../features/favorites/presentation/screens/favorites_screen.dart';
 import '../features/profile/presentation/screens/more_screen.dart';
+import '../features/booking/presentation/screens/bookings_screen.dart';
+import '../features/booking/presentation/screens/booking_detail_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -33,6 +35,8 @@ class AppRoutes {
   static const String editChild = '/edit-child';
   static const String favorites = '/favorites-screen';
   static const String more = '/more-screen';
+  static const String bookings = '/bookings-screen';
+  static const String bookingDetail = '/booking-detail';
 }
 
 class AppRouter {
@@ -60,6 +64,21 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const FavoritesScreen());
       case AppRoutes.more:
         return MaterialPageRoute(builder: (_) => const MoreScreen());
+      case AppRoutes.bookings:
+        return MaterialPageRoute(builder: (_) => const BookingsScreen());
+      case AppRoutes.bookingDetail:
+        final args = settings.arguments;
+        if (args is! int) {
+          return MaterialPageRoute(
+            builder:
+                (_) => const Scaffold(
+                  body: Center(child: Text('Бронь не передана')),
+                ),
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) => BookingDetailScreen(bookingId: args),
+        );
 
       case AppRoutes.addChild:
         return MaterialPageRoute(builder: (_) => const ChildFormScreen());
@@ -68,21 +87,21 @@ class AppRouter {
         final args = settings.arguments;
         if (args is! ChildModel) {
           return MaterialPageRoute(
-            builder: (_) => const Scaffold(
-              body: Center(child: Text('Ребёнок не передан')),
-            ),
+            builder:
+                (_) => const Scaffold(
+                  body: Center(child: Text('Ребёнок не передан')),
+                ),
           );
         }
-        return MaterialPageRoute(
-          builder: (_) => ChildFormScreen(child: args),
-        );
+        return MaterialPageRoute(builder: (_) => ChildFormScreen(child: args));
       case AppRoutes.editProfile:
         final args = settings.arguments;
         if (args is! ProfileModel) {
           return MaterialPageRoute(
-            builder: (_) => const Scaffold(
-              body: Center(child: Text('Профиль не передан')),
-            ),
+            builder:
+                (_) => const Scaffold(
+                  body: Center(child: Text('Профиль не передан')),
+                ),
           );
         }
         return MaterialPageRoute(
@@ -92,19 +111,19 @@ class AppRouter {
         final args = settings.arguments;
         if (args is! CampModel) {
           return MaterialPageRoute(
-            builder: (_) => const Scaffold(
-              body: Center(child: Text('Лагерь не передан')),
-            ),
+            builder:
+                (_) => const Scaffold(
+                  body: Center(child: Text('Лагерь не передан')),
+                ),
           );
         }
-        return MaterialPageRoute(
-          builder: (_) => CampDetailScreen(camp: args),
-        );
+        return MaterialPageRoute(builder: (_) => CampDetailScreen(camp: args));
       default:
         return MaterialPageRoute(
-          builder: (_) => const Scaffold(
-            body: Center(child: Text('Страница не найдена')),
-          ),
+          builder:
+              (_) => const Scaffold(
+                body: Center(child: Text('Страница не найдена')),
+              ),
         );
     }
   }

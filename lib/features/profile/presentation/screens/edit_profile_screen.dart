@@ -7,10 +7,7 @@ import '../../data/models/profile_model.dart';
 class EditProfileScreen extends StatefulWidget {
   final ProfileModel profile;
 
-  const EditProfileScreen({
-    super.key,
-    required this.profile,
-  });
+  const EditProfileScreen({super.key, required this.profile});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -36,8 +33,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.profile.fullName);
-    _phoneController =
-        TextEditingController(text: _stripPhonePrefix(widget.profile.phone));
+    _phoneController = TextEditingController(
+      text: _stripPhonePrefix(widget.profile.phone),
+    );
     _emailController = TextEditingController(text: widget.profile.email);
   }
 
@@ -77,11 +75,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   ({String firstName, String lastName}) _splitFullName(String fullName) {
-    final parts = fullName
-        .trim()
-        .split(RegExp(r'\s+'))
-        .where((e) => e.isNotEmpty)
-        .toList();
+    final parts =
+        fullName
+            .trim()
+            .split(RegExp(r'\s+'))
+            .where((e) => e.isNotEmpty)
+            .toList();
 
     if (parts.isEmpty) {
       return (firstName: '', lastName: '');
@@ -91,10 +90,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return (firstName: parts.first, lastName: '');
     }
 
-    return (
-    firstName: parts.first,
-    lastName: parts.sublist(1).join(' '),
-    );
+    return (firstName: parts.first, lastName: parts.sublist(1).join(' '));
   }
 
   bool get _isEmailValid {
@@ -117,13 +113,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (!_phoneTouched) return;
     final value = _phoneController.text.trim();
     _phoneError =
-    value.isEmpty || !_isPhoneValid ? 'Введите корректный номер телефона' : null;
+        value.isEmpty || !_isPhoneValid
+            ? 'Введите корректный номер телефона'
+            : null;
   }
 
   void _validateEmail() {
     if (!_emailTouched) return;
     final value = _emailController.text.trim();
-    _emailError = value.isEmpty || !_isEmailValid ? 'Введите корректный email' : null;
+    _emailError =
+        value.isEmpty || !_isEmailValid ? 'Введите корректный email' : null;
   }
 
   bool _validateForm() {
@@ -153,13 +152,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     try {
       final split = _splitFullName(_nameController.text);
 
-      final updatedProfile = await ServiceLocator.profileApiService.updateProfile(
-        firstName: split.firstName,
-        lastName: split.lastName,
-        email: _emailController.text.trim(),
-        phone: _normalizePhone(_phoneController.text),
-        avatarUrl: widget.profile.avatarUrl,
-      );
+      final updatedProfile = await ServiceLocator.profileApiService
+          .updateProfile(
+            firstName: split.firstName,
+            lastName: split.lastName,
+            email: _emailController.text.trim(),
+            phone: _normalizePhone(_phoneController.text),
+            avatarUrl: widget.profile.avatarUrl,
+          );
 
       if (!mounted) return;
       Navigator.pop(context, updatedProfile);
@@ -185,10 +185,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     return Padding(
       padding: const EdgeInsets.only(top: 6),
-      child: Text(
-        text,
-        style: AppTextStyles.error,
-      ),
+      child: Text(text, style: AppTextStyles.error),
     );
   }
 
@@ -254,29 +251,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           child: SizedBox(
                             width: 132,
                             height: 132,
-                            child: avatarUrl != null && avatarUrl.isNotEmpty
-                                ? Image.network(
-                              avatarUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(
-                                color: const Color(0xFFD9D9D9),
-                                alignment: Alignment.center,
-                                child: const Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                  size: 52,
-                                ),
-                              ),
-                            )
-                                : Container(
-                              color: const Color(0xFFD9D9D9),
-                              alignment: Alignment.center,
-                              child: const Icon(
-                                Icons.person,
-                                color: Colors.white,
-                                size: 52,
-                              ),
-                            ),
+                            child:
+                                avatarUrl != null && avatarUrl.isNotEmpty
+                                    ? Image.network(
+                                      avatarUrl,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (_, __, ___) => Container(
+                                            color: const Color(0xFFD9D9D9),
+                                            alignment: Alignment.center,
+                                            child: const Icon(
+                                              Icons.person,
+                                              color: Colors.white,
+                                              size: 52,
+                                            ),
+                                          ),
+                                    )
+                                    : Container(
+                                      color: const Color(0xFFD9D9D9),
+                                      alignment: Alignment.center,
+                                      child: const Icon(
+                                        Icons.person,
+                                        color: Colors.white,
+                                        size: 52,
+                                      ),
+                                    ),
                           ),
                         ),
                         Positioned(
@@ -368,22 +367,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      child: _isLoading
-                          ? const SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.4,
-                          color: Colors.white,
-                        ),
-                      )
-                          : const Text(
-                        'Сохранить',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+                      child:
+                          _isLoading
+                              ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.4,
+                                  color: Colors.white,
+                                ),
+                              )
+                              : const Text(
+                                'Сохранить',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                     ),
                   ),
                 ],
@@ -435,9 +435,7 @@ class _AuthTextField extends StatelessWidget {
       onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: AppTextStyles.inputHint.copyWith(
-          color: Colors.black87,
-        ),
+        hintStyle: AppTextStyles.inputHint.copyWith(color: Colors.black87),
         filled: true,
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(
@@ -486,9 +484,7 @@ class _PhoneTextField extends StatelessWidget {
       onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: AppTextStyles.inputHint.copyWith(
-          color: Colors.black87,
-        ),
+        hintStyle: AppTextStyles.inputHint.copyWith(color: Colors.black87),
         filled: true,
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(
@@ -509,18 +505,11 @@ class _PhoneTextField extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 6),
-              Icon(
-                Icons.keyboard_arrow_down,
-                size: 18,
-                color: Colors.black,
-              ),
+              Icon(Icons.keyboard_arrow_down, size: 18, color: Colors.black),
             ],
           ),
         ),
-        prefixIconConstraints: const BoxConstraints(
-          minWidth: 0,
-          minHeight: 0,
-        ),
+        prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(

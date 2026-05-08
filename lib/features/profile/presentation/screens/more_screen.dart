@@ -12,7 +12,7 @@ class MoreScreen extends StatelessWidget {
     Navigator.pushNamedAndRemoveUntil(
       context,
       AppRoutes.login,
-          (route) => false,
+      (route) => false,
     );
   }
 
@@ -110,10 +110,7 @@ class _CircleButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const _CircleButton({
-    required this.icon,
-    required this.onTap,
-  });
+  const _CircleButton({required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -126,11 +123,7 @@ class _CircleButton extends StatelessWidget {
         child: SizedBox(
           width: 40,
           height: 40,
-          child: Icon(
-            icon,
-            size: 18,
-            color: Colors.black,
-          ),
+          child: Icon(icon, size: 18, color: Colors.black),
         ),
       ),
     );
@@ -173,16 +166,13 @@ class _MoreMenuTile extends StatelessWidget {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: textColor == const Color(0xFFE55050)
-                      ? const Color(0xFFFFF1F1)
-                      : const Color(0xFFF6F6F6),
+                  color:
+                      textColor == const Color(0xFFE55050)
+                          ? const Color(0xFFFFF1F1)
+                          : const Color(0xFFF6F6F6),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  icon,
-                  color: iconColor,
-                  size: 22,
-                ),
+                child: Icon(icon, color: iconColor, size: 22),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -198,9 +188,10 @@ class _MoreMenuTile extends StatelessWidget {
               Icon(
                 Icons.arrow_forward_ios,
                 size: 18,
-                color: textColor == const Color(0xFFE55050)
-                    ? const Color(0xFF7A7A7A)
-                    : Colors.black,
+                color:
+                    textColor == const Color(0xFFE55050)
+                        ? const Color(0xFF7A7A7A)
+                        : Colors.black,
               ),
             ],
           ),

@@ -78,22 +78,23 @@ class _NavItem extends StatelessWidget {
           alignment: Alignment.center,
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 220),
-            child: isActive
-                ? Text(
-              label,
-              key: ValueKey(label),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            )
-                : Icon(
-              icon,
-              key: ValueKey(icon.codePoint),
-              color: Colors.white,
-              size: 24,
-            ),
+            child:
+                isActive
+                    ? Text(
+                      label,
+                      key: ValueKey(label),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )
+                    : Icon(
+                      icon,
+                      key: ValueKey(icon.codePoint),
+                      color: Colors.white,
+                      size: 24,
+                    ),
           ),
         ),
       ),

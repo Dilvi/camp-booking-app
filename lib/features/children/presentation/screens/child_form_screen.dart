@@ -6,10 +6,7 @@ import '../../data/models/child_model.dart';
 class ChildFormScreen extends StatefulWidget {
   final ChildModel? child;
 
-  const ChildFormScreen({
-    super.key,
-    this.child,
-  });
+  const ChildFormScreen({super.key, this.child});
 
   @override
   State<ChildFormScreen> createState() => _ChildFormScreenState();
@@ -57,7 +54,8 @@ class _ChildFormScreenState extends State<ChildFormScreen> {
     );
     _gender = child?.gender.isNotEmpty == true ? child!.gender : 'male';
     _selectedHobby = child?.hobby.isNotEmpty == true ? child!.hobby : null;
-    _selectedAllergy = child?.allergy.isNotEmpty == true ? child!.allergy : null;
+    _selectedAllergy =
+        child?.allergy.isNotEmpty == true ? child!.allergy : null;
   }
 
   @override
@@ -99,7 +97,7 @@ class _ChildFormScreenState extends State<ChildFormScreen> {
 
     setState(() {
       _birthDateController.text =
-      '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}';
+          '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}';
     });
   }
 
@@ -170,26 +168,32 @@ class _ChildFormScreenState extends State<ChildFormScreen> {
     });
 
     try {
-      final child = _isEdit
-          ? await ServiceLocator.childrenApiService.updateChild(
-        childId: widget.child!.id,
-        photoUrl: widget.child!.photoUrl,
-        firstName: _firstNameController.text.trim(),
-        lastName: _lastNameController.text.trim(),
-        birthDate: _formatBirthDateForApi(_birthDateController.text.trim()),
-        gender: _gender,
-        hobby: _selectedHobby!,
-        allergy: _selectedAllergy!,
-      )
-          : await ServiceLocator.childrenApiService.createChild(
-        photoUrl: widget.child?.photoUrl ?? 'https://example.com/photo.jpg',
-        firstName: _firstNameController.text.trim(),
-        lastName: _lastNameController.text.trim(),
-        birthDate: _formatBirthDateForApi(_birthDateController.text.trim()),
-        gender: _gender,
-        hobby: _selectedHobby!,
-        allergy: _selectedAllergy!,
-      );
+      final child =
+          _isEdit
+              ? await ServiceLocator.childrenApiService.updateChild(
+                childId: widget.child!.id,
+                photoUrl: widget.child!.photoUrl,
+                firstName: _firstNameController.text.trim(),
+                lastName: _lastNameController.text.trim(),
+                birthDate: _formatBirthDateForApi(
+                  _birthDateController.text.trim(),
+                ),
+                gender: _gender,
+                hobby: _selectedHobby!,
+                allergy: _selectedAllergy!,
+              )
+              : await ServiceLocator.childrenApiService.createChild(
+                photoUrl:
+                    widget.child?.photoUrl ?? 'https://example.com/photo.jpg',
+                firstName: _firstNameController.text.trim(),
+                lastName: _lastNameController.text.trim(),
+                birthDate: _formatBirthDateForApi(
+                  _birthDateController.text.trim(),
+                ),
+                gender: _gender,
+                hobby: _selectedHobby!,
+                allergy: _selectedAllergy!,
+              );
 
       if (!mounted) return;
       Navigator.pop(context, child);
@@ -293,10 +297,7 @@ class _ChildFormScreenState extends State<ChildFormScreen> {
             const SizedBox(height: 20),
             const Text(
               'Пол',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 10),
             _DropdownBox<String>(
@@ -313,50 +314,46 @@ class _ChildFormScreenState extends State<ChildFormScreen> {
             const SizedBox(height: 20),
             const Text(
               'Хобби',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 10),
             _ChipContainer(
-              children: _hobbies
-                  .map(
-                    (hobby) => _SelectableChip(
-                  label: _hobbyLabel(hobby),
-                  selected: _selectedHobby == hobby,
-                  onTap: () {
-                    setState(() {
-                      _selectedHobby = hobby;
-                    });
-                  },
-                ),
-              )
-                  .toList(),
+              children:
+                  _hobbies
+                      .map(
+                        (hobby) => _SelectableChip(
+                          label: _hobbyLabel(hobby),
+                          selected: _selectedHobby == hobby,
+                          onTap: () {
+                            setState(() {
+                              _selectedHobby = hobby;
+                            });
+                          },
+                        ),
+                      )
+                      .toList(),
             ),
             const SizedBox(height: 20),
             const Text(
               'Аллергия',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 10),
             _ChipContainer(
-              children: _allergies
-                  .map(
-                    (allergy) => _SelectableChip(
-                  label: _allergyLabel(allergy),
-                  selected: _selectedAllergy == allergy,
-                  onTap: () {
-                    setState(() {
-                      _selectedAllergy = allergy;
-                    });
-                  },
-                ),
-              )
-                  .toList(),
+              children:
+                  _allergies
+                      .map(
+                        (allergy) => _SelectableChip(
+                          label: _allergyLabel(allergy),
+                          selected: _selectedAllergy == allergy,
+                          onTap: () {
+                            setState(() {
+                              _selectedAllergy = allergy;
+                            });
+                          },
+                        ),
+                      )
+                      .toList(),
             ),
             if (_serverError != null) ...[
               const SizedBox(height: 14),
@@ -384,22 +381,23 @@ class _ChildFormScreenState extends State<ChildFormScreen> {
                   ),
                   elevation: 0,
                 ),
-                child: _isLoading
-                    ? const SizedBox(
-                  width: 22,
-                  height: 22,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.4,
-                    color: Colors.white,
-                  ),
-                )
-                    : Text(
-                  buttonText,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+                child:
+                    _isLoading
+                        ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.4,
+                            color: Colors.white,
+                          ),
+                        )
+                        : Text(
+                          buttonText,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
               ),
             ),
           ],
@@ -413,10 +411,7 @@ class _CircleButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const _CircleButton({
-    required this.icon,
-    required this.onTap,
-  });
+  const _CircleButton({required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -426,11 +421,7 @@ class _CircleButton extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         customBorder: const CircleBorder(),
-        child: SizedBox(
-          width: 40,
-          height: 40,
-          child: Icon(icon, size: 18),
-        ),
+        child: SizedBox(width: 40, height: 40, child: Icon(icon, size: 18)),
       ),
     );
   }
@@ -447,29 +438,31 @@ class _ChildAvatar extends StatelessWidget {
       child: SizedBox(
         width: 132,
         height: 132,
-        child: photoUrl != null && photoUrl!.isNotEmpty
-            ? Image.network(
-          photoUrl!,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => Container(
-            color: const Color(0xFFD9D9D9),
-            alignment: Alignment.center,
-            child: const Icon(
-              Icons.person,
-              color: Colors.white,
-              size: 52,
-            ),
-          ),
-        )
-            : Container(
-          color: const Color(0xFFD9D9D9),
-          alignment: Alignment.center,
-          child: const Icon(
-            Icons.person,
-            color: Colors.white,
-            size: 52,
-          ),
-        ),
+        child:
+            photoUrl != null && photoUrl!.isNotEmpty
+                ? Image.network(
+                  photoUrl!,
+                  fit: BoxFit.cover,
+                  errorBuilder:
+                      (_, __, ___) => Container(
+                        color: const Color(0xFFD9D9D9),
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 52,
+                        ),
+                      ),
+                )
+                : Container(
+                  color: const Color(0xFFD9D9D9),
+                  alignment: Alignment.center,
+                  child: const Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 52,
+                  ),
+                ),
       ),
     );
   }
@@ -479,10 +472,7 @@ class _LabeledTextField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
 
-  const _LabeledTextField({
-    required this.label,
-    required this.controller,
-  });
+  const _LabeledTextField({required this.label, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -592,17 +582,18 @@ class _DropdownBox<T> extends StatelessWidget {
         child: DropdownButton<T>(
           value: value,
           isExpanded: true,
-          items: items
-              .map(
-                (item) => DropdownMenuItem<T>(
-              value: item,
-              child: Text(
-                itemLabel(item),
-                style: const TextStyle(fontSize: 16),
-              ),
-            ),
-          )
-              .toList(),
+          items:
+              items
+                  .map(
+                    (item) => DropdownMenuItem<T>(
+                      value: item,
+                      child: Text(
+                        itemLabel(item),
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  )
+                  .toList(),
           onChanged: onChanged,
         ),
       ),
@@ -625,11 +616,7 @@ class _ChipContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: const Color(0xFFE7E7E7)),
       ),
-      child: Wrap(
-        spacing: 10,
-        runSpacing: 12,
-        children: children,
-      ),
+      child: Wrap(spacing: 10, runSpacing: 12, children: children),
     );
   }
 }

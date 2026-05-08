@@ -92,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
         password: _passwordController.text,
       );
 
-      debugPrint('LOGIN TOKEN: $token');
+      await TokenStorage.saveToken(token);
 
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, AppRoutes.home);
@@ -111,16 +111,6 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
     }
-    final token = await ServiceLocator.authApiService.login(
-      email: _emailController.text.trim(),
-      password: _passwordController.text,
-    );
-
-    // СОХРАНЯЕМ
-    await TokenStorage.saveToken(token);
-
-    if (!mounted) return;
-    Navigator.pushReplacementNamed(context, AppRoutes.home);
   }
 
   void _onEmailChanged(String value) {
@@ -164,10 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Войти',
-                    style: AppTextStyles.loginTitle,
-                  ),
+                  const Text('Войти', style: AppTextStyles.loginTitle),
                   const SizedBox(height: 10),
                   const Text(
                     'Давай вернём тебя обратно.',
@@ -198,12 +185,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: _passwordError != null
-                            ? Text(
-                          _passwordError!,
-                          style: AppTextStyles.error,
-                        )
-                            : const SizedBox.shrink(),
+                        child:
+                            _passwordError != null
+                                ? Text(
+                                  _passwordError!,
+                                  style: AppTextStyles.error,
+                                )
+                                : const SizedBox.shrink(),
                       ),
                       TextButton(
                         onPressed: () {},
@@ -268,19 +256,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      child: _isLoading
-                          ? const SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.4,
-                          color: Colors.white,
-                        ),
-                      )
-                          : const Text(
-                        'Войти',
-                        style: AppTextStyles.primaryButton,
-                      ),
+                      child:
+                          _isLoading
+                              ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.4,
+                                  color: Colors.white,
+                                ),
+                              )
+                              : const Text(
+                                'Войти',
+                                style: AppTextStyles.primaryButton,
+                              ),
                     ),
                   ),
                   const SizedBox(height: 22),
@@ -391,25 +380,12 @@ class _DividerWithText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Expanded(
-          child: Divider(
-            color: Color(0xFFE3E3E3),
-            thickness: 1,
-          ),
-        ),
+        const Expanded(child: Divider(color: Color(0xFFE3E3E3), thickness: 1)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Text(
-            text,
-            style: AppTextStyles.dividerText,
-          ),
+          child: Text(text, style: AppTextStyles.dividerText),
         ),
-        const Expanded(
-          child: Divider(
-            color: Color(0xFFE3E3E3),
-            thickness: 1,
-          ),
-        ),
+        const Expanded(child: Divider(color: Color(0xFFE3E3E3), thickness: 1)),
       ],
     );
   }
@@ -419,10 +395,7 @@ class _SocialButton extends StatelessWidget {
   final String label;
   final String assetPath;
 
-  const _SocialButton({
-    required this.label,
-    required this.assetPath,
-  });
+  const _SocialButton({required this.label, required this.assetPath});
 
   @override
   Widget build(BuildContext context) {
@@ -440,12 +413,7 @@ class _SocialButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              assetPath,
-              width: 22,
-              height: 22,
-              fit: BoxFit.contain,
-            ),
+            Image.asset(assetPath, width: 22, height: 22, fit: BoxFit.contain),
             const SizedBox(width: 10),
             Flexible(
               child: Text(

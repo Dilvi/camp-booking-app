@@ -4,14 +4,9 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.blue,
-      ),
+      colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       scaffoldBackgroundColor: Colors.white,
-      appBarTheme: const AppBarTheme(
-        centerTitle: true,
-        elevation: 0,
-      ),
+      appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
     );
   }
 }

@@ -13,10 +13,7 @@ class AuthApiService {
   }) async {
     final response = await _dioClient.post(
       ApiConstants.login,
-      data: {
-        'email': email,
-        'password': password,
-      },
+      data: {'email': email, 'password': password},
     );
 
     final data = response.data;

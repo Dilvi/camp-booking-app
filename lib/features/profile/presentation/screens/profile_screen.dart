@@ -54,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.pushNamedAndRemoveUntil(
       context,
       AppRoutes.login,
-          (route) => false,
+      (route) => false,
     );
   }
 
@@ -69,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Navigator.pushNamedAndRemoveUntil(
         context,
         AppRoutes.home,
-            (route) => false,
+        (route) => false,
       );
       return;
     }
@@ -133,10 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 40),
           Text(
             _error!,
-            style: const TextStyle(
-              color: Colors.red,
-              fontSize: 16,
-            ),
+            style: const TextStyle(color: Colors.red, fontSize: 16),
           ),
           const SizedBox(height: 16),
           ElevatedButton(
@@ -192,9 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               if (result is String && result.isNotEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Пароль успешно изменён'),
-                  ),
+                  const SnackBar(content: Text('Пароль успешно изменён')),
                 );
               }
             },
@@ -211,7 +206,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _ProfileMenuTile(
             icon: Icons.article_outlined,
             title: 'Мои бронирования',
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.bookings);
+            },
           ),
           const SizedBox(height: 18),
           _ProfileMenuTile(
@@ -257,9 +254,8 @@ class _ProfileHeader extends StatelessWidget {
             child: Image.asset(
               'assets/images/home_header.png',
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                color: const Color(0xFFD8EEF3),
-              ),
+              errorBuilder:
+                  (_, __, ___) => Container(color: const Color(0xFFD8EEF3)),
             ),
           ),
           const Positioned(
@@ -287,10 +283,7 @@ class _ProfileCard extends StatelessWidget {
   final ProfileModel profile;
   final VoidCallback onTap;
 
-  const _ProfileCard({
-    required this.profile,
-    required this.onTap,
-  });
+  const _ProfileCard({required this.profile, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -313,7 +306,9 @@ class _ProfileCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    profile.fullName.isEmpty ? 'Пользователь' : profile.fullName,
+                    profile.fullName.isEmpty
+                        ? 'Пользователь'
+                        : profile.fullName,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -363,29 +358,31 @@ class _Avatar extends StatelessWidget {
       child: SizedBox(
         width: 72,
         height: 72,
-        child: avatarUrl != null && avatarUrl!.isNotEmpty
-            ? Image.network(
-          avatarUrl!,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => Container(
-            color: const Color(0xFFD9D9D9),
-            alignment: Alignment.center,
-            child: const Icon(
-              Icons.person,
-              color: Colors.white,
-              size: 34,
-            ),
-          ),
-        )
-            : Container(
-          color: const Color(0xFFD9D9D9),
-          alignment: Alignment.center,
-          child: const Icon(
-            Icons.person,
-            color: Colors.white,
-            size: 34,
-          ),
-        ),
+        child:
+            avatarUrl != null && avatarUrl!.isNotEmpty
+                ? Image.network(
+                  avatarUrl!,
+                  fit: BoxFit.cover,
+                  errorBuilder:
+                      (_, __, ___) => Container(
+                        color: const Color(0xFFD9D9D9),
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 34,
+                        ),
+                      ),
+                )
+                : Container(
+                  color: const Color(0xFFD9D9D9),
+                  alignment: Alignment.center,
+                  child: const Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 34,
+                  ),
+                ),
       ),
     );
   }
@@ -430,11 +427,7 @@ class _ProfileMenuTile extends StatelessWidget {
                   color: Color(0xFFF6F6F6),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  icon,
-                  color: iconColor,
-                  size: 22,
-                ),
+                child: Icon(icon, color: iconColor, size: 22),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -450,9 +443,10 @@ class _ProfileMenuTile extends StatelessWidget {
               Icon(
                 Icons.arrow_forward_ios,
                 size: 18,
-                color: textColor == const Color(0xFFE55050)
-                    ? const Color(0xFF7A7A7A)
-                    : Colors.black,
+                color:
+                    textColor == const Color(0xFFE55050)
+                        ? const Color(0xFF7A7A7A)
+                        : Colors.black,
               ),
             ],
           ),
